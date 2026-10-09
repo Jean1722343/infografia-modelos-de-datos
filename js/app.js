@@ -179,7 +179,7 @@
     // el nombre abre directamente "de dónde sale" (pestaña Fuentes)
     const [ox, oy, ow, oh, ofs, otxt] = st.origin;
     make("p", "el tx tx--origin origin hit reveal", `${pos(ox, oy, ow, oh)};--fs:${ofs};--lh:1.06;--c:${c};--d:.6s`,
-      `${esc(otxt)}<span class="src-dot" aria-hidden="true">${ICON.book}</span>`,
+      esc(otxt),
       { ...open, "data-tab": "fuentes", "data-zone": st.n, "data-tip": "¿De dónde sale este dato? <b>Ver las fuentes</b>", "aria-label": `${otxt}: ver de dónde sale la información` });
     const [bx, by, bw, bh, bfs, blh, btxt] = st.body;
     make("p", "el tx tx--body body hit reveal-lines", `${pos(bx, by, bw, bh)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal`,

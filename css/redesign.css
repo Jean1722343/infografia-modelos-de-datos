@@ -167,3 +167,6 @@
 @media (prefers-reduced-motion: reduce) {
   .desk::before, .desk::after, .desk .aur { animation: none !important; }
 }
+
+/* El nombre se puede tocar para ver sus fuentes: subrayado punteado solo al señalar */
+.hit.origin:hover { background: none; text-decoration: underline dotted color-mix(in srgb, var(--c) 70%, transparent); text-underline-offset: calc(6 * var(--u)); text-decoration-thickness: calc(3 * var(--u)); color: color-mix(in srgb, var(--c) 60%, black); }
