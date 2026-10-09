@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La evolución de los modelos de datos · Infografía interactiva</title>
+  <meta name="description" content="Infografía interactiva: el viaje de cómo estructuramos la información, del modelo jerárquico (1964) al orientado a objetos (1989).">
+  <meta property="og:title" content="La evolución de los modelos de datos">
+  <meta property="og:description" content="Infografía interactiva: jerárquico, red, relacional, objeto-relacional y orientado a objetos (1964–1999).">
+  <meta property="og:image" content="assets/img/preview.jpg">
+  <meta name="theme-color" content="#EBF2FF">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='14' rx='22' ry='8' fill='%233a6fc4'/%3E%3Cpath d='M10 14v36c0 4.4 9.8 8 22 8s22-3.6 22-8V14c0 4.4-9.8 8-22 8s-22-3.6-22-8z' fill='%23111'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Tinos&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#linea">Saltar a la línea de tiempo</a>
+
+  <header class="hero" id="inicio">
+    <p class="hero__kicker" aria-label="La evolución de los">LA EVOLUCIÓN DE LOS</p>
+    <h1 class="hero__title"><span>MODELOS DE DATOS</span></h1>
+    <p class="hero__sub">El viaje de cómo estructuramos la información (1964–1999)</p>
+    <p class="hero__hint"><span class="tap-dot" aria-hidden="true"></span>Toca cualquier imagen, año o título para ver la información completa</p>
+    <a class="hero__scroll" href="#linea" aria-label="Bajar a la línea de tiempo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15m0 0-6-6m6 6 6-6"/></svg>
+    </a>
+  </header>
+
+  <nav class="chips" aria-label="Ir a una etapa">
+    <div class="chips__track" id="chips"></div>
+    <div class="chips__progress" aria-hidden="true"><span id="progress"></span></div>
+  </nav>
+
+  <main id="linea" class="timeline" aria-label="Línea de tiempo de los modelos de datos">
+    <div class="timeline__rail" aria-hidden="true"><span id="rail"></span></div>
+    <!-- las etapas se generan desde js/data.js -->
+  </main>
+
+  <section class="credits" id="fuentes" aria-labelledby="fuentes-titulo">
+    <h2 id="fuentes-titulo" class="credits__title">Autor y fuentes</h2>
+    <div class="credits__grid">
+      <div class="card reveal">
+        <h3>Equipo 1</h3>
+        <p class="muted">Bases de Datos · Unidad 1: Introducción a las bases de datos</p>
+        <ul class="team" id="equipo"></ul>
+      </div>
+      <div class="card reveal">
+        <h3>Fuentes consultadas</h3>
+        <ul class="sources" id="fuentes-lista"></ul>
+        <h4>Referencias</h4>
+        <ul class="refs" id="referencias"></ul>
+      </div>
+    </div>
+    <div class="credits__actions reveal">
+      <a class="btn" href="assets/infografia-original.jpg" download>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+        Descargar la infografía original
+      </a>
+      <a class="btn btn--ghost" href="#inicio">Volver arriba</a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>Infografía interactiva hecha con HTML, CSS y JavaScript · Universidad del Istmo</p>
+  </footer>
+
+  <!-- Panel de detalle -->
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet__backdrop" data-close></div>
+    <article class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">
+      <button class="sheet__close" type="button" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="sheet__grab" aria-hidden="true"></div>
+      <header class="sheet__head">
+        <p class="sheet__stage" id="sheet-stage"></p>
+        <h2 class="sheet__title" id="sheet-title"></h2>
+        <p class="sheet__origin" id="sheet-origin"></p>
+      </header>
+      <figure class="sheet__anim" id="sheet-anim" aria-hidden="true"></figure>
+      <p class="sheet__creator"><strong>Año y creador:</strong> <span id="sheet-creator"></span></p>
+      <div class="tabs" role="tablist" aria-label="Información del modelo" id="tabs">
+        <button role="tab" type="button" data-tab="definicion">Definición</button>
+        <button role="tab" type="button" data-tab="caracteristicas">Características</button>
+        <button role="tab" type="button" data-tab="ventajas">Ventajas</button>
+        <button role="tab" type="button" data-tab="desventajas">Desventajas</button>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="tabpanel" tabindex="0"></div>
+      <footer class="sheet__nav">
+        <button type="button" class="navbtn" id="prev"><span aria-hidden="true">←</span> <span class="navbtn__label"></span></button>
+        <button type="button" class="navbtn navbtn--next" id="next"><span class="navbtn__label"></span> <span aria-hidden="true">→</span></button>
+      </footer>
+    </article>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
