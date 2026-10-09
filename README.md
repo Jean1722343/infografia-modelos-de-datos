@@ -16,10 +16,14 @@ El viaje de cómo estructuramos la información (1964–1999), contado en una in
 
 ## Cómo se usa
 
-- **Toca cualquier imagen, año o título** para abrir la ficha completa del modelo, con su definición, características, ventajas y desventajas, y una animación que explica cómo organiza los datos.
-- Pasa de un modelo a otro con los botones **anterior / siguiente** o con las flechas del teclado. `Esc` cierra la ficha.
-- Los chips de arriba te llevan directo a cada año.
-- Cada ficha tiene su propio enlace, por ejemplo `…/#relacional`.
+Es **una sola hoja de infografía**, igual a la de Canva (1536 × 2752), pero viva:
+
+- **Toca cualquier dibujo, año, título o texto** para abrir la ficha completa del modelo: año y creador, definición, características, ventajas, desventajas y una animación que explica cómo organiza los datos.
+- Al pasar el cursor, cada pieza se ilumina y muestra qué representa.
+- Cada etapa se arma con su propia animación: piezas que entran, el año que cuenta, la flecha que se dibuja con datos que viajan, y los ✔ / ✘ que se estampan.
+- **Autor y fuentes** abre la ficha del equipo y de las fuentes.
+- Barra inferior: **Hoja completa** (ver toda la hoja en pantalla), **Repetir** la animación, **Créditos** y **Descargar** la infografía original.
+- Pasa de un modelo a otro con **anterior / siguiente** o con las flechas del teclado; `Esc` cierra. Cada ficha tiene su enlace, por ejemplo `…/#relacional`.
 
 ## Tecnología
 
@@ -28,9 +32,10 @@ Sitio estático en HTML, CSS y JavaScript puro, sin dependencias ni paso de comp
 ```
 index.html        estructura de la página
 css/styles.css    diseño, animaciones y versión para celular
-js/data.js        contenido de los cinco modelos y las fuentes
-js/app.js         interacción, panel de detalle y animaciones SVG
-assets/           ilustraciones y la infografía original
+js/data.js        contenido de las fichas y las fuentes
+js/app.js         maqueta de la hoja (coordenadas de Canva), animaciones y fichas
+assets/pieces/    piezas de los dibujos recortadas de la exportación de Canva
+assets/           la infografía original y capturas
 ```
 
 Para verla en local: `python -m http.server` dentro de la carpeta y abrir http://localhost:8000
