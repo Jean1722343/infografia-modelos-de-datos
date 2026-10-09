@@ -94,12 +94,6 @@
       pulses: [[150, 2208, 100], [555, 2208, 100], [374, 2340, 100]], hint: [96, 2110]
     }
   ];
-  // separación extra en la columna de texto de la etapa 3 (deja respirar las tarjetas)
-  [["relacional", 22]].forEach(([id, dy]) => {
-    const s = STAGES.find((x) => x.id === id);
-    s.title[1] += dy; s.origin[1] += dy; s.body[1] += dy;
-  });
-  STAGES.find((x) => x.id === "orientado-objetos").chip = "Atkinson et al. · Manifiesto OO";
   const ARROWS = [[650, 862], [1085, 1287], [1472, 1735], [1890, 2150]];
   const BOX = { // piezas recortadas: x, y, w, h (lienzo de Canva)
     "s1-mainframe": [66, 512, 334, 320], "s1-tree": [400, 512, 312, 320],
@@ -142,25 +136,23 @@
     { "data-zone": "0" });
 
   /* ---------- etapas ---------- */
-  const CX = 892, CW = 586, PAD = 34;      // columna de texto dentro de las tarjetas
   const ICON = {
     ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     bad: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
     person: '<svg class="ic" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg>',
     book: '<svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 5v16M8 7h7"/></svg>',
+    chev: '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
+    x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     link: '<svg class="ic" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>'
   };
   STAGES.forEach((st) => {
     const c = `var(--c-${st.id})`;
     const open = { "data-open": st.id, role: "button", tabindex: "0" };
-    // resplandor de color detrás del grupo de dibujos
+    // resplandor de color detrás del grupo de dibujos (solo aparece al señalar la etapa)
     const bx0 = Math.min(...st.pieces.map(([k]) => BOX[k][0])), by0 = Math.min(...st.pieces.map(([k]) => BOX[k][1]));
     const bx1 = Math.max(...st.pieces.map(([k]) => BOX[k][0] + BOX[k][2])), by1 = Math.max(...st.pieces.map(([k]) => BOX[k][1] + BOX[k][3]));
-    make("span", "el blob", `${pos(bx0 - 10, by0 - 10, bx1 - bx0 + 20, by1 - by0 + 20)};--c:${c}`, "", { "data-zone": st.n, "aria-hidden": "true" });
-    // tarjeta detrás de los textos (su alto se ajusta al contenido)
-    const card = make("div", "el card", `${pos(CX - PAD, st.title[1] - 18, CW + PAD * 2, 300)};--c:${c}`, "", { "data-card": st.id, "data-zone": st.n, "aria-hidden": "true" });
-    card.dataset.top = st.title[1] - 18;
+    make("span", "el blob", `${pos(bx0 - 20, by0 - 20, bx1 - bx0 + 40, by1 - by0 + 40)};--c:${c}`, "", { "data-blob": st.id, "aria-hidden": "true" });
     // piezas de la ilustración
     st.pieces.forEach(([key, anim, tip], i) => {
       const [x, y, w, h] = BOX[key];
@@ -172,25 +164,26 @@
     });
     st.pulses.forEach(([x, y, s], i) =>
       make("span", "pulse", `left:calc(${x} * var(--u));top:calc(${y} * var(--u));width:calc(${s} * var(--u));height:calc(${s} * var(--u));--c:${c};--d:${1.4 + i * 0.6}s`, "", { "data-zone": st.n, "aria-hidden": "true" }));
-    // etapa y año (insignias)
-    const [, ey, , eh, efs] = st.etapa;
-    make("button", "el tx tx--label etapa hit reveal", `${pos(724, ey - 4, 140, eh + 6)};--fs:${efs * 0.8};--lh:1;--c:${c};--d:.15s`,
-      `<span class="etapa__pill">Etapa ${st.n}</span>`, { ...open, type: "button", "data-zone": st.n, "aria-label": `Etapa ${st.n}: ver ${st.title[5].replace("\n", " ")}` });
-    const [, yy, , yh, yfs] = st.year;
-    make("button", "el tx tx--label year hit reveal", `${pos(714, yy, 160, yh)};--fs:${yfs};--lh:1;--c:${c};--d:.3s`,
+    // etapa y año (como en Canva)
+    const [ex, ey, ew, eh, efs] = st.etapa;
+    make("button", "el tx tx--label etapa hit reveal", `${pos(ex, ey, ew, eh)};--fs:${efs};--lh:1.1;--c:${c};--d:.15s;text-align:${st.n === 5 ? "left" : "center"}`,
+      `Etapa ${st.n}`, { ...open, type: "button", "data-zone": st.n, "aria-label": `Etapa ${st.n}: ver ${st.title[5].replace("\n", " ")}` });
+    const [yx, yy, yw, yh, yfs] = st.year;
+    make("button", "el tx tx--label year hit reveal", `${pos(yx, yy, yw, yh)};--fs:${yfs};--lh:1;--c:${c};--d:.3s`,
       `${st.yearLabel ? `<span class="yl">${st.yearLabel}</span>` : ""}<span class="num" data-to="${byId[st.id].anio}">${byId[st.id].anio}</span>`,
       { ...open, type: "button", "data-zone": st.n, "aria-label": `Año ${byId[st.id].anio}: ver ${st.title[5].replace("\n", " ")}` });
-    // título, origen (con sus fuentes) y texto, alineados dentro de la tarjeta
-    const [, ty, , th, tfs, ttxt, , tlh] = st.title;
-    make("h2", "el tx tx--head mtitle hit reveal", `${pos(CX, ty, CW, th)};--fs:${tfs};--lh:${tlh};--c:${c};--d:.35s;--in:none;opacity:1`,
+    // título, origen y texto (como en Canva)
+    const [tx, ty, tw, th, tfs, ttxt, tcenter, tlh] = st.title;
+    make("h2", `el tx tx--head mtitle hit reveal ${tcenter ? "c" : ""}`, `${pos(tx, ty, tw, th)};--fs:${tfs};--lh:${tlh};--c:${c};--d:.35s;--in:none;opacity:1`,
       `<span class="tx-in">${esc(ttxt)}</span>`, { ...open, "data-zone": st.n });
-    const [, oy, , oh, ofs, otxt] = st.origin;
-    make("button", "el origin-chip hit reveal", `${pos(CX, oy, CW, oh)};--fs:${ofs * 0.72};--c:${c};--d:.6s`,
-      `<span class="oc">${ICON.person}<span class="oc__t">${esc(st.chip || otxt.replace(/^\(|\)$/g, ""))}</span><span class="oc__src">${ICON.book}Fuentes</span></span>`,
-      { ...open, type: "button", "data-tab": "fuentes", "data-zone": st.n, "data-tip": "¿De dónde sale este dato? <b>Ver las fuentes</b>", "aria-label": `${otxt}: ver de dónde sale la información` });
-    const [, by, , , bfs, blh, btxt] = st.body;
-    make("p", "el tx tx--body body hit reveal-lines", `${pos(CX, by, CW, 10)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal;height:auto`,
-      bodyHTML(btxt), { ...open, "data-zone": st.n, "data-body": st.id });
+    // el nombre abre directamente "de dónde sale" (pestaña Fuentes)
+    const [ox, oy, ow, oh, ofs, otxt] = st.origin;
+    make("p", "el tx tx--origin origin hit reveal", `${pos(ox, oy, ow, oh)};--fs:${ofs};--lh:1.06;--c:${c};--d:.6s`,
+      `${esc(otxt)}<span class="src-dot" aria-hidden="true">${ICON.book}</span>`,
+      { ...open, "data-tab": "fuentes", "data-zone": st.n, "data-tip": "¿De dónde sale este dato? <b>Ver las fuentes</b>", "aria-label": `${otxt}: ver de dónde sale la información` });
+    const [bx, by, bw, bh, bfs, blh, btxt] = st.body;
+    make("p", "el tx tx--body body hit reveal-lines", `${pos(bx, by, bw, bh)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal`,
+      bodyHTML(btxt), { ...open, "data-zone": st.n });
     // pista "toca"
     make("span", "hint", `left:calc(${st.hint[0]} * var(--u));top:calc(${st.hint[1]} * var(--u));--c:${c};--d:1.6s`,
       "<i></i>Toca cualquier imagen o texto", { "data-zone": st.n, "aria-hidden": "true" });
@@ -215,35 +208,43 @@
   const socialHTML = (cls = "soc") => window.DEV.redes.map((r) =>
     `<a class="${cls}" href="${r.url}" target="_blank" rel="noopener noreferrer" style="--sc:${r.color}" aria-label="${r.red} de ${window.DEV.nombre}" data-tip="<b>${r.red}</b>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${r.d}"/></svg></a>`).join("");
 
-  /* ---------- autor y fuentes (rediseñado) ---------- */
-  make("button", "el tx tx--head hit reveal credits-btn", `${pos(78, 2522, 600, 48.8)};--fs:41.8;--lh:1.06;--c:#3a72c8;--d:.1s;text-align:left;letter-spacing:.02em`,
-    "Autor y fuentes", { type: "button", "data-credits": "1", "data-zone": "6", "data-tip": "Toca para ver <b>equipo y fuentes</b>" });
-  make("p", "el tx tx--body reveal", `${pos(80, 2576, 640, 30)};--fs:22;--lh:1.1;--d:.2s;color:#4a5566`,
-    "Equipo 1 · Bases de Datos, Unidad 1: Introducción a las bases de datos", { "data-zone": "6" });
+  /* ---------- autor y fuentes: desplegable ---------- */
+  const credBtn = make("button", "el tx tx--head hit reveal credits-btn", `${pos(76.2, 2520.6, 600, 48.8)};--fs:41.8;--lh:1.06;--c:#3a72c8;--d:.1s;text-align:left;letter-spacing:.02em`,
+    `Autor y fuentes <span class="chev" aria-hidden="true">${ICON.chev}</span>`,
+    { type: "button", "data-zone": "6", "aria-expanded": "false", "aria-controls": "drawer", "data-tip": "Toca para <b>desplegar</b> equipo y fuentes" });
+  make("p", "el tx tx--body reveal", `${pos(81.3, 2580, 1380, 30)};--fs:22;--lh:1.06;--d:.3s`,
+    "Bases de Datos · Unidad 1: Introducción a las bases de datos", { "data-zone": "6" });
+
   const avColors = MODELOS.map((m) => `var(--c-${m.id})`);
-  window.EQUIPO.forEach((nm, i) => {
-    const col = i % 2, row = Math.floor(i / 2);
-    const ini = nm.split(" ").slice(0, 2).map((w) => w[0]).join("");
-    if (nm === window.DEV.nombre) {
-      make("div", "el member member--dev reveal", `${pos(80, 2618 + row * 44, 790, 40)};--c:${avColors[i]};--d:${(0.3 + i * 0.08).toFixed(2)}s`,
-        `<button type="button" class="member__btn hit" data-credits="1" aria-label="${nm}, desarrollador: ver equipo y fuentes"><span class="member__av" style="background:${avColors[i]}">${ini}</span><span class="member__n">${nm} <em>(desarrollador)</em></span></button><span class="member__soc">${socialHTML()}</span>`,
-        { "data-zone": "6" });
-      return;
-    }
-    make("button", "el member hit reveal", `${pos(80 + col * 395, 2618 + row * 44, 385, 40)};--c:${avColors[i]};--d:${(0.3 + i * 0.08).toFixed(2)}s`,
-      `<span class="member__av" style="background:${avColors[i]}">${ini}</span><span class="member__n">${nm}</span>`,
-      { type: "button", "data-credits": "1", "data-zone": "6", "aria-label": `${nm}: ver equipo y fuentes` });
+  const drawer = make("div", "drawer", "", `
+    <div class="drawer__head">
+      <p class="drawer__kicker">Equipo 1 · Universidad del Istmo</p>
+      <button type="button" class="drawer__close" data-drawer-close aria-label="Cerrar">${ICON.x}</button>
+    </div>
+    <ul class="drawer__team">${window.EQUIPO.map((nm, i) => {
+      const ini = nm.split(" ").slice(0, 2).map((w) => w[0]).join("");
+      const dev = nm === window.DEV.nombre;
+      return `<li class="${dev ? "is-dev" : ""}" style="--i:${i};--c:${avColors[i]}"><span class="member__av" style="background:${avColors[i]}">${ini}</span>
+        <span class="drawer__name">${nm}${dev ? ' <em>(desarrollador)</em>' : ""}</span>${dev ? `<span class="member__soc">${socialHTML()}</span>` : ""}</li>`;
+    }).join("")}</ul>
+    <p class="drawer__label">Fuentes consultadas</p>
+    <div class="drawer__src">${window.FUENTES.map((f, i) =>
+      `<a class="src-chip" href="${f.url}" target="_blank" rel="noopener noreferrer" style="--i:${i}" data-tip="<b>${esc(f.titulo)}</b>">${ICON.link}<span>${f.sitio}</span></a>`).join("")}
+      <button type="button" class="src-chip src-chip--all" data-credits="1">${ICON.book}<span>Qué dice cada una</span></button>
+    </div>`, { id: "drawer", role: "region", "aria-label": "Autor y fuentes" });
+
+  const setDrawer = (on) => {
+    drawer.classList.toggle("is-open", on);
+    credBtn.classList.toggle("is-open", on);
+    credBtn.setAttribute("aria-expanded", on);
+    hideTip();
+  };
+  credBtn.addEventListener("click", (e) => { e.stopPropagation(); setDrawer(!drawer.classList.contains("is-open")); });
+  drawer.addEventListener("click", (e) => { if (e.target.closest("[data-drawer-close]")) setDrawer(false); });
+  document.addEventListener("click", (e) => {
+    if (drawer.classList.contains("is-open") && !drawer.contains(e.target) && !credBtn.contains(e.target)) setDrawer(false);
   });
-  make("p", "el tx tx--label reveal", `${pos(CX, 2585, 320, 30)};--fs:22;--lh:1.1;--d:.3s;color:#4a5566;letter-spacing:.06em`,
-    "Fuentes consultadas", { "data-zone": "6" });
-  window.FUENTES.forEach((f, i) => {
-    const col = i % 2, row = Math.floor(i / 2);
-    make("a", "el src-chip hit reveal", `${pos(CX + col * 300, 2622 + row * 44, 288, 38)};--c:#3a72c8;--d:${(0.4 + i * 0.08).toFixed(2)}s`,
-      `${ICON.link}<span>${f.sitio}</span>`,
-      { href: f.url, target: "_blank", rel: "noopener noreferrer", "data-zone": "6", "data-tip": `<b>${esc(f.titulo)}</b>` });
-  });
-  make("button", "el src-chip src-chip--all hit reveal", `${pos(CX + 300, 2622 + 2 * 44, 288, 38)};--c:#0d0d0d;--d:.85s`,
-    `${ICON.book}<span>Qué dice cada una</span>`, { type: "button", "data-credits": "1", "data-zone": "6" });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawer.classList.contains("is-open")) setDrawer(false); });
 
   document.querySelectorAll(".sr").forEach((el) =>
     Object.assign(el.style, { position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0 0 0 0)" }));
@@ -254,19 +255,6 @@
   const ZONES = [[0, 440], ...STAGES.map((s) => s.zone), [2520, 2752]];
   const zoneEls = ZONES.map(([y0, y1], i) =>
     make("div", "el", `${pos(0, y0, 1536, y1 - y0)};pointer-events:none`, "", { "data-zone-box": i, "aria-hidden": "true" }));
-
-  const layoutCards = () => {
-    const u = sheet.clientWidth / 1536;
-    if (!u) return;
-    inner.querySelectorAll("[data-card]").forEach((card) => {
-      const body = inner.querySelector(`[data-body="${card.dataset.card}"]`);
-      const bottom = (body.offsetTop + body.offsetHeight) / u + 16;
-      card.style.setProperty("--h", (bottom - card.dataset.top).toFixed(1));
-    });
-  };
-  new ResizeObserver(layoutCards).observe(sheet);
-  document.fonts?.ready.then(layoutCards);
-  layoutCards();
 
   const countUp = (el) => {
     const to = +el.dataset.to;
@@ -338,6 +326,11 @@
     if (!e.relatedTarget || !e.relatedTarget.closest?.(".pc")) inner.querySelectorAll(".group-hover").forEach((p) => p.classList.remove("group-hover"));
   });
   window.addEventListener("scroll", hideTip, { passive: true });
+  inner.addEventListener("pointerover", (e) => {
+    const id = e.target.closest("[data-open]")?.dataset.open;
+    inner.querySelectorAll(".blob").forEach((b) => b.classList.toggle("is-lit", b.dataset.blob === id));
+  });
+  inner.addEventListener("pointerleave", () => inner.querySelectorAll(".blob.is-lit").forEach((b) => b.classList.remove("is-lit")));
 
   // atenúa las piezas hermanas mientras se señala una
   const style = document.createElement("style");
@@ -568,6 +561,7 @@
     const op = ev.target.closest("[data-open]");
     if (op) { ripple(ev, `var(--c-${op.dataset.open})`); openModal(op.dataset.open, ev, op); return; }
     if (ev.target.closest("[data-credits]")) { ripple(ev, "#3a72c8"); openModal("credits", ev, ev.target.closest("[data-credits]")); return; }
+    if (ev.target.closest(".credits-btn")) { ripple(ev, "#3a72c8"); return; }
     if (ev.target.closest(".maintitle")) { ripple(ev, "#3a72c8"); replay(); return; }
     if (ev.target.closest("[data-close]")) { closeModal(); return; }
     const jump = ev.target.closest("[data-tabjump]");

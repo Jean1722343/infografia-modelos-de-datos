@@ -22,7 +22,7 @@ Es **una sola hoja de infografía**, igual a la de Canva (1536 × 2752), pero vi
 - Al pasar el cursor, cada pieza se ilumina y muestra qué representa.
 - Cada etapa se arma con su propia animación: piezas que entran, el año que cuenta, la flecha que se dibuja con datos que viajan, y los ✔ / ✘ que se estampan.
 - **Cada nombre** (IBM IMS, Bachman, Codd, Stonebraker, Atkinson) tiene una etiqueta **Fuentes**: al tocarla dice de dónde sale ese dato, qué dice cada fuente consultada y su enlace. Cada ficha tiene además la pestaña **Fuentes**.
-- **Autor y fuentes** muestra al equipo y los enlaces a las fuentes.
+- **Autor y fuentes** es desplegable: al tocarlo se abre un panel con el equipo, las redes del desarrollador y los enlaces a las fuentes.
 - Barra inferior: **Hoja completa** (ver toda la hoja en pantalla), **Repetir** la animación, **Créditos** y **Descargar** la infografía original.
 - Pasa de un modelo a otro con **anterior / siguiente** o con las flechas del teclado; `Esc` cierra. Cada ficha tiene su enlace, por ejemplo `…/#relacional`.
 
