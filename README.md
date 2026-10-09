@@ -21,7 +21,8 @@ Es **una sola hoja de infografía**, igual a la de Canva (1536 × 2752), pero vi
 - **Toca cualquier dibujo, año, título o texto** para abrir la ficha completa del modelo: año y creador, definición, características, ventajas, desventajas y una animación que explica cómo organiza los datos.
 - Al pasar el cursor, cada pieza se ilumina y muestra qué representa.
 - Cada etapa se arma con su propia animación: piezas que entran, el año que cuenta, la flecha que se dibuja con datos que viajan, y los ✔ / ✘ que se estampan.
-- **Autor y fuentes** abre la ficha del equipo y de las fuentes.
+- **Cada nombre** (IBM IMS, Bachman, Codd, Stonebraker, Atkinson) tiene una etiqueta **Fuentes**: al tocarla dice de dónde sale ese dato, qué dice cada fuente consultada y su enlace. Cada ficha tiene además la pestaña **Fuentes**.
+- **Autor y fuentes** muestra al equipo y los enlaces a las fuentes.
 - Barra inferior: **Hoja completa** (ver toda la hoja en pantalla), **Repetir** la animación, **Créditos** y **Descargar** la infografía original.
 - Pasa de un modelo a otro con **anterior / siguiente** o con las flechas del teclado; `Esc` cierra. Cada ficha tiene su enlace, por ejemplo `…/#relacional`.
 
@@ -48,7 +49,7 @@ Para verla en local: `python -m http.server` dentro de la carpeta y abrir http:/
 - Alexander De Los Santos López
 - Fátima Alejandra Morales Gordon
 - Evelin Vázquez Rojas
-- Jean Paul Gallegos Cruz
+- Jean Paul Gallegos Cruz (desarrollador) · [LinkedIn](https://www.linkedin.com/in/jeanpaulgc) · [Instagram](https://www.instagram.com/jpgallegosc) · [GitHub](https://github.com/Jean1722343) · [Facebook](https://www.facebook.com/profile.php?id=61593415306721) · [TikTok](https://www.tiktok.com/@jpgallegosc)
 
 El diseño original de la infografía se hizo en Canva; la descarga está en [`assets/infografia-original.jpg`](assets/infografia-original.jpg).
 

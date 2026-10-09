@@ -94,6 +94,12 @@
       pulses: [[150, 2208, 100], [555, 2208, 100], [374, 2340, 100]], hint: [96, 2110]
     }
   ];
+  // separación extra en la columna de texto de la etapa 3 (deja respirar las tarjetas)
+  [["relacional", 22]].forEach(([id, dy]) => {
+    const s = STAGES.find((x) => x.id === id);
+    s.title[1] += dy; s.origin[1] += dy; s.body[1] += dy;
+  });
+  STAGES.find((x) => x.id === "orientado-objetos").chip = "Atkinson et al. · Manifiesto OO";
   const ARROWS = [[650, 862], [1085, 1287], [1472, 1735], [1890, 2150]];
   const BOX = { // piezas recortadas: x, y, w, h (lienzo de Canva)
     "s1-mainframe": [66, 512, 334, 320], "s1-tree": [400, 512, 312, 320],
@@ -136,9 +142,25 @@
     { "data-zone": "0" });
 
   /* ---------- etapas ---------- */
+  const CX = 892, CW = 586, PAD = 34;      // columna de texto dentro de las tarjetas
+  const ICON = {
+    ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    bad: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+    person: '<svg class="ic" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg>',
+    book: '<svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 5v16M8 7h7"/></svg>',
+    link: '<svg class="ic" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>'
+  };
   STAGES.forEach((st) => {
     const c = `var(--c-${st.id})`;
     const open = { "data-open": st.id, role: "button", tabindex: "0" };
+    // resplandor de color detrás del grupo de dibujos
+    const bx0 = Math.min(...st.pieces.map(([k]) => BOX[k][0])), by0 = Math.min(...st.pieces.map(([k]) => BOX[k][1]));
+    const bx1 = Math.max(...st.pieces.map(([k]) => BOX[k][0] + BOX[k][2])), by1 = Math.max(...st.pieces.map(([k]) => BOX[k][1] + BOX[k][3]));
+    make("span", "el blob", `${pos(bx0 - 10, by0 - 10, bx1 - bx0 + 20, by1 - by0 + 20)};--c:${c}`, "", { "data-zone": st.n, "aria-hidden": "true" });
+    // tarjeta detrás de los textos (su alto se ajusta al contenido)
+    const card = make("div", "el card", `${pos(CX - PAD, st.title[1] - 18, CW + PAD * 2, 300)};--c:${c}`, "", { "data-card": st.id, "data-zone": st.n, "aria-hidden": "true" });
+    card.dataset.top = st.title[1] - 18;
     // piezas de la ilustración
     st.pieces.forEach(([key, anim, tip], i) => {
       const [x, y, w, h] = BOX[key];
@@ -150,25 +172,25 @@
     });
     st.pulses.forEach(([x, y, s], i) =>
       make("span", "pulse", `left:calc(${x} * var(--u));top:calc(${y} * var(--u));width:calc(${s} * var(--u));height:calc(${s} * var(--u));--c:${c};--d:${1.4 + i * 0.6}s`, "", { "data-zone": st.n, "aria-hidden": "true" }));
-    // etapa y año
-    const [ex, ey, ew, eh, efs] = st.etapa;
-    make("button", "el tx tx--label etapa hit reveal", `${pos(ex, ey, ew, eh)};--fs:${efs};--lh:1.1;--c:${c};--d:.15s;text-align:${st.n === 5 ? "left" : "center"}`,
-      `Etapa ${st.n}`, { ...open, type: "button", "data-zone": st.n, "aria-label": `Etapa ${st.n}: ver ${st.title[5].replace("\n", " ")}` });
-    const [yx, yy, yw, yh, yfs] = st.year;
-    const yr = make("button", "el tx tx--label year hit reveal", `${pos(yx, yy, yw, yh)};--fs:${yfs};--lh:1;--c:${c};--d:.3s`,
+    // etapa y año (insignias)
+    const [, ey, , eh, efs] = st.etapa;
+    make("button", "el tx tx--label etapa hit reveal", `${pos(724, ey - 4, 140, eh + 6)};--fs:${efs * 0.8};--lh:1;--c:${c};--d:.15s`,
+      `<span class="etapa__pill">Etapa ${st.n}</span>`, { ...open, type: "button", "data-zone": st.n, "aria-label": `Etapa ${st.n}: ver ${st.title[5].replace("\n", " ")}` });
+    const [, yy, , yh, yfs] = st.year;
+    make("button", "el tx tx--label year hit reveal", `${pos(714, yy, 160, yh)};--fs:${yfs};--lh:1;--c:${c};--d:.3s`,
       `${st.yearLabel ? `<span class="yl">${st.yearLabel}</span>` : ""}<span class="num" data-to="${byId[st.id].anio}">${byId[st.id].anio}</span>`,
       { ...open, type: "button", "data-zone": st.n, "aria-label": `Año ${byId[st.id].anio}: ver ${st.title[5].replace("\n", " ")}` });
-    yr.style.opacity = "";
-    // título, origen y texto
-    const [tx, ty, tw, th, tfs, ttxt, tcenter, tlh] = st.title;
-    make("h2", `el tx tx--head mtitle hit reveal ${tcenter ? "c" : ""}`, `${pos(tx, ty, tw, th)};--fs:${tfs};--lh:${tlh};--c:${c};--d:.35s;--in:none;opacity:1`,
+    // título, origen (con sus fuentes) y texto, alineados dentro de la tarjeta
+    const [, ty, , th, tfs, ttxt, , tlh] = st.title;
+    make("h2", "el tx tx--head mtitle hit reveal", `${pos(CX, ty, CW, th)};--fs:${tfs};--lh:${tlh};--c:${c};--d:.35s;--in:none;opacity:1`,
       `<span class="tx-in">${esc(ttxt)}</span>`, { ...open, "data-zone": st.n });
-    const [ox, oy, ow, oh, ofs, otxt] = st.origin;
-    make("p", "el tx tx--origin origin hit reveal", `${pos(ox, oy, ow, oh)};--fs:${ofs};--lh:1.06;--c:${c};--d:.6s`,
-      esc(otxt), { ...open, "data-zone": st.n });
-    const [bx, by, bw, bh, bfs, blh, btxt] = st.body;
-    make("p", "el tx tx--body body hit reveal-lines", `${pos(bx, by, bw, bh)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal`,
-      bodyHTML(btxt), { ...open, "data-zone": st.n });
+    const [, oy, , oh, ofs, otxt] = st.origin;
+    make("button", "el origin-chip hit reveal", `${pos(CX, oy, CW, oh)};--fs:${ofs * 0.72};--c:${c};--d:.6s`,
+      `<span class="oc">${ICON.person}<span class="oc__t">${esc(st.chip || otxt.replace(/^\(|\)$/g, ""))}</span><span class="oc__src">${ICON.book}Fuentes</span></span>`,
+      { ...open, type: "button", "data-tab": "fuentes", "data-zone": st.n, "data-tip": "¿De dónde sale este dato? <b>Ver las fuentes</b>", "aria-label": `${otxt}: ver de dónde sale la información` });
+    const [, by, , , bfs, blh, btxt] = st.body;
+    make("p", "el tx tx--body body hit reveal-lines", `${pos(CX, by, CW, 10)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal;height:auto`,
+      bodyHTML(btxt), { ...open, "data-zone": st.n, "data-body": st.id });
     // pista "toca"
     make("span", "hint", `left:calc(${st.hint[0]} * var(--u));top:calc(${st.hint[1]} * var(--u));--c:${c};--d:1.6s`,
       "<i></i>Toca cualquier imagen o texto", { "data-zone": st.n, "aria-hidden": "true" });
@@ -190,12 +212,38 @@
     inner.appendChild(svg);
   });
 
-  /* ---------- autor y fuentes ---------- */
-  make("button", "el tx tx--head hit reveal credits-btn", `${pos(76.2, 2520.6, 567, 48.8)};--fs:41.8;--lh:1.06;--c:#3a72c8;--d:.1s;text-align:left;letter-spacing:.02em`,
+  const socialHTML = (cls = "soc") => window.DEV.redes.map((r) =>
+    `<a class="${cls}" href="${r.url}" target="_blank" rel="noopener noreferrer" style="--sc:${r.color}" aria-label="${r.red} de ${window.DEV.nombre}" data-tip="<b>${r.red}</b>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${r.d}"/></svg></a>`).join("");
+
+  /* ---------- autor y fuentes (rediseñado) ---------- */
+  make("button", "el tx tx--head hit reveal credits-btn", `${pos(78, 2522, 600, 48.8)};--fs:41.8;--lh:1.06;--c:#3a72c8;--d:.1s;text-align:left;letter-spacing:.02em`,
     "Autor y fuentes", { type: "button", "data-credits": "1", "data-zone": "6", "data-tip": "Toca para ver <b>equipo y fuentes</b>" });
-  make("p", "el tx tx--body hit reveal credits-btn", `${pos(81.3, 2607.5, 1380, 80)};--fs:22;--lh:1.06;--c:#3a72c8;--d:.3s`,
-    "Bases de Datos · Unidad 1: Introducción a las bases de datos\nFuentes: Breve historia del nacimiento de las bases de datos (click-it.es), infodigital.ciberlinea.net, academy-code.codingia.com, entidadrelacion.com, jordinponc.blogspot.com",
-    { "data-credits": "1", "data-zone": "6", role: "button", tabindex: "0" });
+  make("p", "el tx tx--body reveal", `${pos(80, 2576, 640, 30)};--fs:22;--lh:1.1;--d:.2s;color:#4a5566`,
+    "Equipo 1 · Bases de Datos, Unidad 1: Introducción a las bases de datos", { "data-zone": "6" });
+  const avColors = MODELOS.map((m) => `var(--c-${m.id})`);
+  window.EQUIPO.forEach((nm, i) => {
+    const col = i % 2, row = Math.floor(i / 2);
+    const ini = nm.split(" ").slice(0, 2).map((w) => w[0]).join("");
+    if (nm === window.DEV.nombre) {
+      make("div", "el member member--dev reveal", `${pos(80, 2618 + row * 44, 790, 40)};--c:${avColors[i]};--d:${(0.3 + i * 0.08).toFixed(2)}s`,
+        `<button type="button" class="member__btn hit" data-credits="1" aria-label="${nm}, desarrollador: ver equipo y fuentes"><span class="member__av" style="background:${avColors[i]}">${ini}</span><span class="member__n">${nm} <em>(desarrollador)</em></span></button><span class="member__soc">${socialHTML()}</span>`,
+        { "data-zone": "6" });
+      return;
+    }
+    make("button", "el member hit reveal", `${pos(80 + col * 395, 2618 + row * 44, 385, 40)};--c:${avColors[i]};--d:${(0.3 + i * 0.08).toFixed(2)}s`,
+      `<span class="member__av" style="background:${avColors[i]}">${ini}</span><span class="member__n">${nm}</span>`,
+      { type: "button", "data-credits": "1", "data-zone": "6", "aria-label": `${nm}: ver equipo y fuentes` });
+  });
+  make("p", "el tx tx--label reveal", `${pos(CX, 2585, 320, 30)};--fs:22;--lh:1.1;--d:.3s;color:#4a5566;letter-spacing:.06em`,
+    "Fuentes consultadas", { "data-zone": "6" });
+  window.FUENTES.forEach((f, i) => {
+    const col = i % 2, row = Math.floor(i / 2);
+    make("a", "el src-chip hit reveal", `${pos(CX + col * 300, 2622 + row * 44, 288, 38)};--c:#3a72c8;--d:${(0.4 + i * 0.08).toFixed(2)}s`,
+      `${ICON.link}<span>${f.sitio}</span>`,
+      { href: f.url, target: "_blank", rel: "noopener noreferrer", "data-zone": "6", "data-tip": `<b>${esc(f.titulo)}</b>` });
+  });
+  make("button", "el src-chip src-chip--all hit reveal", `${pos(CX + 300, 2622 + 2 * 44, 288, 38)};--c:#0d0d0d;--d:.85s`,
+    `${ICON.book}<span>Qué dice cada una</span>`, { type: "button", "data-credits": "1", "data-zone": "6" });
 
   document.querySelectorAll(".sr").forEach((el) =>
     Object.assign(el.style, { position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0 0 0 0)" }));
@@ -206,6 +254,19 @@
   const ZONES = [[0, 440], ...STAGES.map((s) => s.zone), [2520, 2752]];
   const zoneEls = ZONES.map(([y0, y1], i) =>
     make("div", "el", `${pos(0, y0, 1536, y1 - y0)};pointer-events:none`, "", { "data-zone-box": i, "aria-hidden": "true" }));
+
+  const layoutCards = () => {
+    const u = sheet.clientWidth / 1536;
+    if (!u) return;
+    inner.querySelectorAll("[data-card]").forEach((card) => {
+      const body = inner.querySelector(`[data-body="${card.dataset.card}"]`);
+      const bottom = (body.offsetTop + body.offsetHeight) / u + 16;
+      card.style.setProperty("--h", (bottom - card.dataset.top).toFixed(1));
+    });
+  };
+  new ResizeObserver(layoutCards).observe(sheet);
+  document.fonts?.ready.then(layoutCards);
+  layoutCards();
 
   const countUp = (el) => {
     const to = +el.dataset.to;
@@ -381,16 +442,23 @@
   /* =====================================================================
      Ficha (modal)
      ===================================================================== */
-  const ICON = {
-    ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
-    bad: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
-    ext: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
-  };
+
   const modal = $("#modal"), card = $(".modal__card", modal), body = $("#m-body");
   let current = -1, currentTab = "definicion", lastFocus = null, closeTimer = null;
 
   const listHTML = (items, kind) => `<ul class="anim-in">${items.map(([t, d], i) =>
     `<li><span class="num ${kind === "bad" ? "bad" : ""}" aria-hidden="true">${kind === "ok" ? ICON.ok : kind === "bad" ? ICON.bad : i + 1}</span><span><b>${t}</b>${d}</span></li>`).join("")}</ul>`;
+
+  const citasHTML = (id) => {
+    const c = window.CITAS[id];
+    return `<p class="cite-intro">Esto es lo que dice cada fuente que usamos sobre este modelo:</p>
+      <ul class="anim-in cites">${c.fuentes.map(([i, nota]) => {
+        const f = window.FUENTES[i];
+        return `<li><span class="num" aria-hidden="true">${ICON.book}</span><span><b>${f.sitio}</b><span class="cite-t">${f.titulo}</span>${nota}
+          <a class="cite-a" href="${f.url}" target="_blank" rel="noopener noreferrer">Abrir la fuente ${ICON.ext}</a></span></li>`;
+      }).join("")}</ul>
+      <p class="cite-ref"><strong>Referencia académica:</strong> ${c.refs.join(" · ")}</p>`;
+  };
 
   const renderTab = (name) => {
     currentTab = name;
@@ -403,7 +471,8 @@
     });
     panel.innerHTML = name === "definicion" ? `<div class="anim-in"><p>${m.definicion}</p></div>`
       : name === "caracteristicas" ? listHTML(m.caracteristicas, "num")
-      : name === "ventajas" ? listHTML(m.ventajas, "ok") : listHTML(m.desventajas, "bad");
+      : name === "ventajas" ? listHTML(m.ventajas, "ok")
+      : name === "desventajas" ? listHTML(m.desventajas, "bad") : citasHTML(m.id);
   };
 
   const renderModel = (i) => {
@@ -415,12 +484,14 @@
       <h2 class="m-title" id="m-title">${m.nombre}</h2>
       <p class="m-origin">${m.origen}</p>
       <figure class="m-anim" aria-hidden="true">${ANIM[m.id](cssColor(m.id))}</figure>
-      <p class="m-creator"><strong>Año y creador:</strong> ${m.anio} · ${m.creador}</p>
+      <p class="m-creator"><strong>Año y creador:</strong> ${m.anio} · ${m.creador}
+        <button type="button" class="cite-link" data-tabjump="fuentes">${ICON.book}¿De dónde sale?</button></p>
       <div class="tabs" role="tablist" aria-label="Información del modelo"><span class="pill"></span>
         <button role="tab" type="button" data-tab="definicion">Definición</button>
         <button role="tab" type="button" data-tab="caracteristicas">Características</button>
         <button role="tab" type="button" data-tab="ventajas">Ventajas</button>
         <button role="tab" type="button" data-tab="desventajas">Desventajas</button>
+        <button role="tab" type="button" data-tab="fuentes">Fuentes</button>
       </div>
       <div class="tabpanel" role="tabpanel" tabindex="0"></div>
       <footer class="m-nav">
@@ -442,9 +513,13 @@
       <h2 class="m-title" id="m-title">Autor y fuentes</h2>
       <p class="m-origin">Equipo 1 · Universidad del Istmo</p>
       <h3 class="m-h">Integrantes</h3>
-      <ul class="team">${window.EQUIPO.map((nm, i) => `<li style="--i:${i}"><span class="av" style="background:${colors[i % colors.length]}" aria-hidden="true">${nm.split(" ").slice(0, 2).map((w) => w[0]).join("")}</span>${nm}</li>`).join("")}</ul>
+      <ul class="team">${window.EQUIPO.map((nm, i) => `<li style="--i:${i}"><span class="av" style="background:${colors[i % colors.length]}" aria-hidden="true">${nm.split(" ").slice(0, 2).map((w) => w[0]).join("")}</span><span class="tm">${nm}${nm === window.DEV.nombre ? ` <em class="role">(desarrollador)</em><span class="tm__soc">${socialHTML("soc soc--lg")}</span>` : ""}</span></li>`).join("")}</ul>
       <h3 class="m-h">Fuentes consultadas</h3>
-      <ul class="sources">${window.FUENTES.map((f, i) => `<li><a href="${f.url}" target="_blank" rel="noopener noreferrer" style="--i:${i}"><b>${f.titulo}</b><span>${f.sitio}</span>${ICON.ext}</a></li>`).join("")}</ul>
+      <ul class="sources">${window.FUENTES.map((f, i) => {
+        const usados = MODELOS.filter((m) => window.CITAS[m.id].fuentes.some(([k]) => k === i)).map((m) => m.nombre.replace("Modelo ", ""));
+        return `<li><a href="${f.url}" target="_blank" rel="noopener noreferrer" style="--i:${i}"><b>${f.titulo}</b><span>${f.sitio} · Respaldó: ${usados.join(", ")}</span>${ICON.ext}</a></li>`;
+      }).join("")}</ul>
+      <p class="cite-ref">En cada ficha, la pestaña <strong>Fuentes</strong> muestra qué dice cada una sobre ese modelo.</p>
       <h3 class="m-h">Referencias</h3>
       <ul class="refs">${window.REFERENCIAS.map((r) => `<li>${r}</li>`).join("")}</ul>`;
     history.replaceState?.(null, "", "#fuentes");
@@ -453,7 +528,7 @@
   const openModal = (what, ev, opener) => {
     clearTimeout(closeTimer);
     lastFocus = opener || document.activeElement;
-    currentTab = "definicion";
+    currentTab = opener?.dataset?.tab || "definicion";
     hideTip();
     modal.hidden = false;
     document.body.classList.add("locked");
@@ -495,6 +570,8 @@
     if (ev.target.closest("[data-credits]")) { ripple(ev, "#3a72c8"); openModal("credits", ev, ev.target.closest("[data-credits]")); return; }
     if (ev.target.closest(".maintitle")) { ripple(ev, "#3a72c8"); replay(); return; }
     if (ev.target.closest("[data-close]")) { closeModal(); return; }
+    const jump = ev.target.closest("[data-tabjump]");
+    if (jump) { renderTab(jump.dataset.tabjump); $(".tabs", body)?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); return; }
     const tab = ev.target.closest("[role=tab]");
     if (tab && body.contains(tab)) { renderTab(tab.dataset.tab); return; }
     const nav = ev.target.closest("[data-go]");
