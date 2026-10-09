@@ -28,7 +28,7 @@ Es **una sola hoja de infografía**, igual a la de Canva (1536 × 2752), pero vi
 
 ## Tecnología
 
-Sitio estático en HTML, CSS y JavaScript puro, sin dependencias ni paso de compilación. Lo publica GitHub Pages.
+Tipografía: Manrope (textos) y Bricolage Grotesque (títulos), con Anton y Tinos en la cabecera como en el diseño original. Sitio estático en HTML, CSS y JavaScript puro, sin dependencias ni paso de compilación. Lo publica GitHub Pages.
 
 ```
 index.html        estructura de la página

@@ -118,12 +118,20 @@
     return el;
   };
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  const bodyHTML = (text) => text.split("\n").map((ln, i) => {
-    let t = esc(ln);
-    t = t.replace(/^✔/, '<span class="chk chk--ok" aria-hidden="true">✔</span><span class="sr">Ventaja:</span>')
-         .replace(/^✘/, '<span class="chk chk--bad" aria-hidden="true">✘</span><span class="sr">Desventaja:</span>');
-    return `<span class="line" style="--i:${i}">${t}</span>`;
-  }).join("");
+  const wordsHTML = (txt) => txt.split(" ").filter(Boolean).map((w, k) => `<span class="w" style="--i:${k}">${esc(w)}</span>`).join(" ");
+  const bodyHTML = (text) => {
+    const lines = text.split("\n");
+    const desc = lines.filter((l) => !/^[✔✘]/.test(l)).join(" ");
+    const pcs = lines.filter((l) => /^[✔✘]/.test(l));
+    return `<span class="desc">${wordsHTML(desc)}</span><span class="pcs">${pcs.map((l, k) => {
+      const ok = l.startsWith("✔");
+      return `<span class="pcl ${ok ? "ok" : "bad"}" style="--k:${k}"><i aria-hidden="true">${ok ? ICON.ok : ICON.bad}</i><span><span class="sr">${ok ? "Ventaja: " : "Desventaja: "}</span>${esc(l.slice(1).trim())}</span></span>`;
+    }).join("")}</span>`;
+  };
+  const charsHTML = (txt) => {
+    let i = 0;
+    return txt.split(" ").map((word) => `<span class="tw">${[...word].map((ch) => `<span class="tc" style="--i:${i++}">${esc(ch)}</span>`).join("")}</span>`).join(" ");
+  };
 
   /* ---------- cabecera ---------- */
   const kicker = make("p", "el tx tx--serif c kicker", `${pos(144.7, 81.8, 1214.3, 110.6)};--fs:92.8;--lh:1`,
@@ -146,6 +154,9 @@
     x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     link: '<svg class="ic" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>'
   };
+  const TX = 884, TW = 596;            // columna de texto (lienzo de Canva)
+  const TEXT = [];
+  STAGES.find((s) => s.id === "objeto-relacional").title[5] = "Modelo objeto-relacional";
   STAGES.forEach((st) => {
     const c = `var(--c-${st.id})`;
     const open = { "data-open": st.id, role: "button", tabindex: "0" };
@@ -159,7 +170,7 @@
       const src = `assets/pieces/${key}.webp`;
       make("div", "el pc hit",
         `${pos(x, y, w, h)};--c:${c};--in:${anim};--d:${(i * 0.14).toFixed(2)}s;--fd:${(5.5 + (i % 3) * 0.9).toFixed(1)}s`,
-        `<div class="pc__float"><img class="pc__img" src="${src}" alt="" draggable="false" width="${w * 2}" height="${h * 2}"><span class="pc__shine" style="-webkit-mask-image:url('${src}');mask-image:url('${src}')"></span></div>`,
+        `<div class="pc__par" style="--dp:${(8 + ((i * 7 + st.n * 3) % 4) * 4)}"><div class="pc__float"><img class="pc__img" src="${src}" alt="" draggable="false" width="${w * 2}" height="${h * 2}"><span class="pc__shine" style="-webkit-mask-image:url('${src}');mask-image:url('${src}')"></span></div></div>`,
         { ...open, "data-zone": st.n, "data-stage": st.n, "data-tip": tip, "aria-label": `${st.title[5].replace("\n", " ")}: ${tip.replace(/<[^>]+>/g, "")}` });
     });
     st.pulses.forEach(([x, y, s], i) =>
@@ -172,18 +183,18 @@
     make("button", "el tx tx--label year hit reveal", `${pos(yx, yy, yw, yh)};--fs:${yfs};--lh:1;--c:${c};--d:.3s`,
       `${st.yearLabel ? `<span class="yl">${st.yearLabel}</span>` : ""}<span class="num" data-to="${byId[st.id].anio}">${byId[st.id].anio}</span>`,
       { ...open, type: "button", "data-zone": st.n, "aria-label": `Año ${byId[st.id].anio}: ver ${st.title[5].replace("\n", " ")}` });
-    // título, origen y texto (como en Canva)
-    const [tx, ty, tw, th, tfs, ttxt, tcenter, tlh] = st.title;
-    make("h2", `el tx tx--head mtitle hit reveal ${tcenter ? "c" : ""}`, `${pos(tx, ty, tw, th)};--fs:${tfs};--lh:${tlh};--c:${c};--d:.35s;--in:none;opacity:1`,
-      `<span class="tx-in">${esc(ttxt)}</span>`, { ...open, "data-zone": st.n });
-    // el nombre abre directamente "de dónde sale" (pestaña Fuentes)
-    const [ox, oy, ow, oh, ofs, otxt] = st.origin;
-    make("p", "el tx tx--origin origin hit reveal", `${pos(ox, oy, ow, oh)};--fs:${ofs};--lh:1.06;--c:${c};--d:.6s`,
-      esc(otxt),
+    // título, nombre y texto: misma columna; el acomodo vertical lo hace flowText()
+    const [, ty, , , , ttxt] = st.title;
+    const tEl = make("h2", "el tx tx--head mtitle hit reveal", `${pos(TX, ty, TW, 10)};--c:${c};--d:.35s;--in:none;opacity:1;height:auto`,
+      ttxt.split("\n").map((ln) => `<span class="tl">${charsHTML(ln)}</span>`).join(""), { ...open, "data-zone": st.n });
+    const [, , , , , otxt] = st.origin;
+    const oEl = make("p", "el tx tx--origin origin hit reveal", `${pos(TX, ty + 60, TW, 10)};--c:${c};--d:.55s;height:auto`,
+      `<span class="odot" aria-hidden="true"></span>${esc(otxt.replace(/^\(|\)$/g, ""))}`,
       { ...open, "data-tab": "fuentes", "data-zone": st.n, "data-tip": "¿De dónde sale este dato? <b>Ver las fuentes</b>", "aria-label": `${otxt}: ver de dónde sale la información` });
-    const [bx, by, bw, bh, bfs, blh, btxt] = st.body;
-    make("p", "el tx tx--body body hit reveal-lines", `${pos(bx, by, bw, bh)};--fs:${bfs};--lh:${blh};--c:${c};--d:.75s;white-space:normal`,
+    const [, , , , , , btxt] = st.body;
+    const bEl = make("p", "el tx tx--body body hit reveal-words", `${pos(TX, ty + 120, TW, 10)};--c:${c};--d:.7s;height:auto`,
       bodyHTML(btxt), { ...open, "data-zone": st.n });
+    TEXT.push({ st, tEl, oEl, bEl });
     // pista "toca"
     make("span", "hint", `left:calc(${st.hint[0]} * var(--u));top:calc(${st.hint[1]} * var(--u));--c:${c};--d:1.6s`,
       "<i></i>Toca cualquier imagen o texto", { "data-zone": st.n, "aria-hidden": "true" });
@@ -255,6 +266,46 @@
   const ZONES = [[0, 440], ...STAGES.map((s) => s.zone), [2520, 2752]];
   const zoneEls = ZONES.map(([y0, y1], i) =>
     make("div", "el", `${pos(0, y0, 1536, y1 - y0)};pointer-events:none`, "", { "data-zone-box": i, "aria-hidden": "true" }));
+
+  const flowText = () => {
+    const u = sheet.clientWidth / 1536;
+    if (!u) return;
+    const H = (el) => el.offsetHeight / u;
+    TEXT.forEach(({ st, tEl, oEl, bEl }, i) => {
+      const next = TEXT[i + 1];
+      const limit = next ? next.st.title[1] - 30 : 2690;
+      const ty = st.title[1];
+      let k = 1;
+      bEl.style.setProperty("--k", k);
+      for (let n = 0; n < 8; n++) {
+        const oy = ty + H(tEl) + 12;
+        oEl.style.setProperty("--y", oy.toFixed(1));
+        const by = oy + H(oEl) + 18;
+        bEl.style.setProperty("--y", by.toFixed(1));
+        if (by + H(bEl) <= limit) break;
+        k -= 0.035;
+        bEl.style.setProperty("--k", k.toFixed(3));
+      }
+    });
+  };
+  new ResizeObserver(flowText).observe(sheet);
+  document.fonts?.ready.then(flowText);
+  flowText();
+
+  if (!reduce && canHover) {                  // los dibujos se mueven en profundidad siguiendo el mouse
+    let raf = 0, mx = 0, my = 0;
+    sheet.addEventListener("pointermove", (e) => {
+      const r = sheet.getBoundingClientRect();
+      mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      my = ((e.clientY - r.top) / Math.min(r.height, innerHeight) - 0.5) * 2;
+      if (!raf) raf = requestAnimationFrame(() => {
+        sheet.style.setProperty("--mx", mx.toFixed(3));
+        sheet.style.setProperty("--my", Math.max(-1, Math.min(1, my)).toFixed(3));
+        raf = 0;
+      });
+    });
+    sheet.addEventListener("pointerleave", () => { sheet.style.setProperty("--mx", 0); sheet.style.setProperty("--my", 0); });
+  }
 
   const countUp = (el) => {
     const to = +el.dataset.to;
