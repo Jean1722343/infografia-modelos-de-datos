@@ -23,30 +23,30 @@
      ===================================================================== */
   const STAGES = [
     {
-      id: "jerarquico", n: 1, zone: [440, 860],
+      id: "red", n: 1, zone: [440, 860],
       etapa: [733.9, 463.7, 135, 40.4, 33.7], year: [717.7, 529, 140, 110, 50], yearLabel: "Años",
-      title: [879.8, 469.5, 548.4, 67.2, 56.1, "Modelo jerárquico", true, 1],
-      origin: [894.5, 554.8, 600, 43.7, 36.7, "(IBM IMS · programa Apolo)"],
-      body: [886.4, 615, 563.1, 183.4, 33.56, 1.099,
+      title: [886.4, 469.5, 412.1, 67.2, 56.1, "Modelo de red", true, 1],
+      origin: [883.5, 554.8, 600, 43.7, 36.7, "(Charles Bachman · IDS, GE)"],
+      body: [875, 615, 603.7, 255.4, 33.56, 1.0996,
+        "Organiza los datos en forma de grafo o red de nodos. Relación N : M; un hijo puede tener varios padres mediante punteros. Desarrollado con IDS y estandarizado por CODASYL (1969).\n✔ Modela relaciones complejas de muchos a muchos.\n✘ Difícil de diseñar y programar."],
+      pieces: [
+        ["s2-server", "riseIn", "<b>Servidor</b> · guarda la red de registros"],
+        ["s2-network", "spinIn", "<b>Red de nodos</b> · un hijo con varios padres (N : M)"]
+      ],
+      pulses: [[421, 497, 92], [617, 576, 92]], hint: [96, 476]
+    },
+    {
+      id: "jerarquico", n: 2, zone: [860, 1280],
+      etapa: [728, 927.5, 135, 40.4, 33.7], year: [725.5, 921, 140, 110, 50],
+      title: [879.8, 853.8, 548.4, 67.2, 56.1, "Modelo jerárquico", true, 1],
+      origin: [894.5, 942.7, 600, 43.7, 36.7, "(IBM IMS · programa Apolo)"],
+      body: [886.4, 997.5, 563.1, 183.4, 33.56, 1.099,
         "Organiza datos en un árbol invertido con relación padre-hijo.\nRelación 1 : N; cada hijo tiene un solo padre.\n✔ Muy rápido con grandes volúmenes.\n✘ Rígido; no permite relaciones N:M."],
       pieces: [
         ["s1-mainframe", "fromLeft", "<b>Mainframe</b> · computadora central donde corría IMS"],
         ["s1-tree", "dropIn", "<b>Árbol</b> · una raíz y sus hijos (1 : N)"]
       ],
-      pulses: [[512, 534, 80]], hint: [96, 476]
-    },
-    {
-      id: "red", n: 2, zone: [860, 1280],
-      etapa: [728, 927.5, 135, 40.4, 33.7], year: [725.5, 921, 140, 110, 50],
-      title: [886.4, 853.8, 412.1, 67.2, 56.1, "Modelo de red", true, 1],
-      origin: [883.5, 942.7, 600, 43.7, 36.7, "(Charles Bachman · IDS, GE)"],
-      body: [875, 997.5, 603.7, 255.4, 33.56, 1.0996,
-        "Organiza los datos en forma de grafo o red de nodos. Relación N : M; un hijo puede tener varios padres mediante punteros. Estándar CODASYL (1969).\n✔ Modela relaciones complejas de muchos a muchos.\n✘ Difícil de diseñar y programar."],
-      pieces: [
-        ["s2-server", "riseIn", "<b>Servidor</b> · guarda la red de registros"],
-        ["s2-network", "spinIn", "<b>Red de nodos</b> · un hijo con varios padres (N : M)"]
-      ],
-      pulses: [[421, 907, 92], [617, 986, 92]], hint: [96, 872]
+      pulses: [[512, 944, 80]], hint: [96, 872]
     },
     {
       id: "relacional", n: 3, zone: [1280, 1700],
@@ -96,8 +96,8 @@
   ];
   const ARROWS = [[650, 862], [1085, 1287], [1472, 1735], [1890, 2150]];
   const BOX = { // piezas recortadas: x, y, w, h (lienzo de Canva)
-    "s1-mainframe": [66, 512, 334, 320], "s1-tree": [400, 512, 312, 320],
-    "s2-server": [84, 922, 142, 320], "s2-network": [226, 888, 500, 338],
+    "s1-mainframe": [66, 922, 334, 320], "s1-tree": [400, 922, 312, 320],
+    "s2-server": [84, 512, 142, 320], "s2-network": [226, 478, 500, 338],
     "s3-t1": [86, 1328, 218, 199], "s3-legend": [86, 1527, 240, 101],
     "s3-t2": [316, 1328, 204, 146], "s3-t3": [520, 1328, 204, 174],
     "s3-t4": [316, 1474, 204, 172], "s3-sql": [520, 1502, 204, 144],

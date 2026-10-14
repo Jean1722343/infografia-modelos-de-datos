@@ -3,19 +3,47 @@
 
 window.MODELOS = [
   {
-    id: "jerarquico",
+    id: "red",
     etapa: 1,
     anio: 1964,
+    nombre: "Modelo de red",
+    origen: "Charles Bachman · IDS, GE",
+    creador: "Charles Bachman, con el desarrollo de IDS (Integrated Data Store) en General Electric (1964); estandarizado después por el comité CODASYL (1969).",
+    relacion: "N : M",
+    resumen: "Organiza los datos en forma de grafo o red de nodos. Relación N : M; un hijo puede tener varios padres mediante punteros. Desarrollado con IDS y estandarizado por CODASYL (1969).",
+    pro: "Modela relaciones complejas de muchos a muchos.",
+    contra: "Difícil de diseñar y programar.",
+    imagen: "assets/img/red.webp",
+    alt: "Servidor conectado a una red de nodos con flechas en varias direcciones",
+    definicion: "Representa los datos como un grafo o red de nodos unidos mediante punteros físicos, lo que permite interconexiones complejas donde un registro miembro puede pertenecer a varios registros dueños (N:M).",
+    caracteristicas: [
+      ["Múltiples padres", "Un registro hijo (miembro) puede tener más de un registro padre (dueño)."],
+      ["Conexión por punteros", "Usa listas de punteros en memoria para relacionar los nodos de la red."],
+      ["Primer estándar formal", "Estableció el primer estándar formal de bases de datos de la industria (DBTG / CODASYL)."]
+    ],
+    ventajas: [
+      ["Modelado flexible", "Representa con precisión relaciones complejas de muchos a muchos (N:M)."],
+      ["Acceso múltiple", "Permite llegar a los datos navegando por diferentes caminos dentro del grafo."]
+    ],
+    desventajas: [
+      ["Complejidad", "Su diseño, programación y mantenimiento resultan muy difíciles."],
+      ["Baja independencia de datos", "Hay una dependencia fuerte entre la estructura física de los datos y el código de las aplicaciones."]
+    ]
+  },
+  {
+    id: "jerarquico",
+    etapa: 2,
+    anio: 1968,
     nombre: "Modelo jerárquico",
     origen: "IBM IMS · programa Apolo",
-    creador: "IBM (IMS, Information Management System), desarrollado para gestionar los datos de los proveedores del Programa Apolo de la NASA.",
+    creador: "IBM (IMS, Information Management System), desarrollado para gestionar los datos de los proveedores del Programa Apolo de la NASA junto a North American Rockwell.",
     relacion: "1 : N",
-    resumen: "Organiza datos en un árbol invertido con relación padre–hijo. Relación 1 : N; cada hijo tiene un solo padre.",
+    resumen: "Organiza datos en un árbol invertido con relación padre–hijo. Relación 1 : N; cada hijo tiene un solo padre. Desarrollado por IBM para el programa Apolo (1968).",
     pro: "Muy rápido con grandes volúmenes.",
     contra: "Rígido; no permite relaciones N:M.",
     imagen: "assets/img/jerarquico.webp",
     alt: "Mainframe junto a un árbol de nodos: una raíz con sus hijos",
-    definicion: "Organiza la información en una estructura de árbol invertido, con nodos interconectados mediante registros de padre e hijo y relaciones jerárquicas estrictas de dependencia.",
+    definicion: "Organiza la información en una estructura de árbol invertido, con nodos interconectados mediante registros de padre e hijo y relaciones jerárquicas estrictas de dependencia (1:N) para maximizar la velocidad en grandes volúmenes transaccionales.",
     caracteristicas: [
       ["Relación padre–hijo (1:N)", "Cada registro hijo está vinculado a un único registro padre."],
       ["Estructura fija", "Los datos se organizan jerárquicamente desde un nodo raíz hacia abajo."],
@@ -28,34 +56,6 @@ window.MODELOS = [
     desventajas: [
       ["Rigidez", "Modificar el esquema es muy complejo y obliga a reescribir las aplicaciones que acceden a él."],
       ["Relaciones limitadas", "No puede representar directamente relaciones de muchos a muchos (N:M) sin duplicar información."]
-    ]
-  },
-  {
-    id: "red",
-    etapa: 2,
-    anio: 1969,
-    nombre: "Modelo de red",
-    origen: "Charles Bachman · IDS, GE",
-    creador: "Charles Bachman, con el desarrollo de IDS (Integrated Data Store); estandarizado después por el comité CODASYL (Conference on Data Systems Languages).",
-    relacion: "N : M",
-    resumen: "Organiza los datos en forma de grafo o red de nodos. Relación N : M; un hijo puede tener varios padres mediante punteros. Estándar CODASYL (1969).",
-    pro: "Modela relaciones complejas de muchos a muchos.",
-    contra: "Difícil de diseñar y programar.",
-    imagen: "assets/img/red.webp",
-    alt: "Servidor conectado a una red de nodos con flechas en varias direcciones",
-    definicion: "Evolución del modelo jerárquico que representa los datos como un grafo o red de nodos unidos mediante punteros, lo que permite interconexiones más complejas entre registros.",
-    caracteristicas: [
-      ["Múltiples padres", "Un registro hijo (miembro) puede tener más de un registro padre (dueño)."],
-      ["Conexión por punteros", "Usa listas de punteros en memoria para relacionar los nodos de la red."],
-      ["Primer estándar", "Estableció el primer estándar formal de bases de datos de la industria (DBTG / CODASYL)."]
-    ],
-    ventajas: [
-      ["Modelado flexible", "Representa con precisión relaciones complejas de muchos a muchos (N:M)."],
-      ["Acceso múltiple", "Permite llegar a los datos navegando por diferentes caminos dentro del grafo."]
-    ],
-    desventajas: [
-      ["Complejidad", "Su diseño, programación y mantenimiento resultan muy difíciles."],
-      ["Baja independencia de datos", "Hay una dependencia fuerte entre la estructura física de los datos y el código de las aplicaciones."]
     ]
   },
   {
@@ -153,11 +153,11 @@ window.FUENTES = [
 ];
 
 window.REFERENCIAS = [
-  "Codd, E. F. (1970). A Relational Model of Data for Large Shared Data Banks. Communications of the ACM, 13(6).",
-  "IBM. History of IMS: Beginnings at NASA.",
   "Bachman, C. W. (2009). The Origin of the Integrated Data Store (IDS). IEEE Annals of the History of Computing.",
-  "Atkinson, M. et al. (1989). The Object-Oriented Database System Manifesto.",
-  "PostgreSQL Global Development Group. A Brief History of PostgreSQL."
+  "IBM. History of IMS: Beginnings at NASA.",
+  "Codd, E. F. (1970). A Relational Model of Data for Large Shared Data Banks. Communications of the ACM, 13(6).",
+  "PostgreSQL Global Development Group. A Brief History of PostgreSQL.",
+  "Atkinson, M. et al. (1989). The Object-Oriented Database System Manifesto."
 ];
 
 window.EQUIPO = [
@@ -171,23 +171,23 @@ window.EQUIPO = [
 /* De dónde sale cada dato: qué dice cada fuente sobre cada modelo (paráfrasis)
    y la referencia académica correspondiente. Índices de window.FUENTES. */
 window.CITAS = {
-  "jerarquico": {
-    fuentes: [
-      [2, "IBM lo desarrolló junto con North American Rockwell para el programa Apolo; organiza los registros en árbol, con un solo padre por registro. Indica que IMS se instaló en 1968 y se comercializó en 1969."],
-      [0, "Lo ubica en los años 60 como el modelo que organiza la información en forma de árbol."],
-      [1, "Lo presenta como el primer modelo implementado: datos en árbol donde cada nodo tiene un padre y puede tener varios hijos."],
-      [4, "IMS formó parte de la primera generación de bases de datos y guardaba los datos en listas y árboles."]
-    ],
-    refs: ["IBM. History of IMS: Beginnings at NASA."]
-  },
   "red": {
     fuentes: [
-      [2, "Charles Bachman creó IDS en General Electric (1963–1964); los registros se enlazan con punteros y el modelo se estandarizó desde 1969 en los informes de CODASYL."],
+      [2, "Charles Bachman creó IDS en General Electric (1963–1964); los registros se enlazan con punteros y el modelo se estandarizó en 1969 en los informes de CODASYL."],
       [0, "Bachman creó IDS para General Electric con un modelo de nodos y enlaces pensado para relaciones complejas."],
-      [1, "Es parecido al jerárquico, pero un nodo puede tener varios padres, lo que permite relaciones de muchos a muchos."],
-      [4, "CODASYL aparece como parte de la primera generación de bases de datos de red."]
+      [1, "Permite que un nodo tenga varios padres mediante listas de punteros, soportando relaciones de muchos a muchos."],
+      [4, "CODASYL e IDS consolidaron la primera generación de bases de datos de red en los años 60."]
     ],
     refs: ["Bachman, C. W. (2009). The Origin of the Integrated Data Store (IDS). IEEE Annals of the History of Computing."]
+  },
+  "jerarquico": {
+    fuentes: [
+      [2, "IBM lo desarrolló junto con North American Rockwell para el programa Apolo; organiza los registros en árbol, con un solo padre por registro. IMS se implementó operativamente en 1968 y se comercializó en 1969."],
+      [0, "Lo ubica en los años 60 como el modelo que organiza la información en forma de árbol."],
+      [1, "Presenta datos en árbol donde cada nodo tiene un solo padre y puede tener varios hijos."],
+      [4, "IMS formó parte de la primera generación de bases de datos y guardaba los datos en listas y árboles jerárquicos."]
+    ],
+    refs: ["IBM. History of IMS: Beginnings at NASA."]
   },
   "relacional": {
     fuentes: [

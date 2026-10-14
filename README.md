@@ -6,8 +6,8 @@ El viaje de cómo estructuramos la información (1964–1999), contado en una in
 
 | Etapa | Año | Modelo | Origen |
 |---|---|---|---|
-| 1 | 1964 | Jerárquico | IBM IMS · programa Apolo |
-| 2 | 1969 | De red | Charles Bachman · IDS / CODASYL |
+| 1 | 1964 | De red | Charles Bachman · IDS / CODASYL |
+| 2 | 1968 | Jerárquico | IBM IMS · programa Apolo |
 | 3 | 1970 | Relacional | Edgar F. Codd · IBM |
 | 4 | 1986 | Objeto-relacional | Michael Stonebraker · POSTGRES |
 | 5 | 1989 | Orientado a objetos | Atkinson et al. · Manifiesto OO / ODMG |
@@ -21,7 +21,7 @@ Es **una sola hoja de infografía**, igual a la de Canva (1536 × 2752), pero vi
 - **Toca cualquier dibujo, año, título o texto** para abrir la ficha completa del modelo: año y creador, definición, características, ventajas, desventajas y una animación que explica cómo organiza los datos.
 - Al pasar el cursor, cada pieza se ilumina y muestra qué representa.
 - Cada etapa se arma con su propia animación: piezas que entran, el año que cuenta, la flecha que se dibuja con datos que viajan, y los ✔ / ✘ que se estampan.
-- **Cada nombre** (IBM IMS, Bachman, Codd, Stonebraker, Atkinson) tiene una etiqueta **Fuentes**: al tocarla dice de dónde sale ese dato, qué dice cada fuente consultada y su enlace. Cada ficha tiene además la pestaña **Fuentes**.
+- **Cada nombre** (Bachman, IBM IMS, Codd, Stonebraker, Atkinson) tiene una etiqueta **Fuentes**: al tocarla dice de dónde sale ese dato, qué dice cada fuente consultada y su enlace. Cada ficha tiene además la pestaña **Fuentes**.
 - **Autor y fuentes** es desplegable: al tocarlo se abre un panel con el equipo, las redes del desarrollador y los enlaces a las fuentes.
 - Barra inferior: **Hoja completa** (ver toda la hoja en pantalla), **Repetir** la animación, **Créditos** y **Descargar** la infografía original.
 - Pasa de un modelo a otro con **anterior / siguiente** o con las flechas del teclado; `Esc` cierra. Cada ficha tiene su enlace, por ejemplo `…/#relacional`.
@@ -60,6 +60,7 @@ El diseño original de la infografía se hizo en Canva; la descarga está en [`a
 - [Historia y evolución de las bases de datos: de 1960 a hoy](https://entidadrelacion.com/historia-bases-de-datos/) — entidadrelacion.com
 - [Antecedentes históricos (PostgreSQL)](https://jordinponc.blogspot.com/2017/02/antecedentes-historicos.html) — jordinponc.blogspot.com
 - [Breve historia del nacimiento de las bases de datos](https://click-it.es/breve-historia-del-nacimiento-de-las-bases-de-datos/) — click-it.es
-- Codd, E. F. (1970). *A Relational Model of Data for Large Shared Data Banks*. Communications of the ACM, 13(6).
 - Bachman, C. W. (2009). *The Origin of the Integrated Data Store (IDS)*. IEEE Annals of the History of Computing.
+- IBM. *History of IMS: Beginnings at NASA*.
+- Codd, E. F. (1970). *A Relational Model of Data for Large Shared Data Banks*. Communications of the ACM, 13(6).
 - Atkinson, M. et al. (1989). *The Object-Oriented Database System Manifesto*.
